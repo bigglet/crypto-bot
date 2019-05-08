@@ -1,4 +1,5 @@
 from kucoin.client import Client
+from kucoin.exceptions import KucoinAPIException
 from decouple import config
 
 class Trader:
@@ -15,9 +16,10 @@ class Trader:
                 sell_pair = coins_in_wallet["currency"] + "-BTC"
                 print( "Create Sell order for: " + sell_pair )
                 try:
-                    self.client.create_market_order(sell_pair, 'sell', coins_in_wallet["available"])
-                except:
+                    self.client.create_market_order(sell_pair, 'sell', size=coins_in_wallet["available"])
+                except KucoinAPIException as error:
                     print("DID NOT SELL")
+                    print( error )
 
     def get_symbol_list(self, quote_currency=None):
         currency_symbol_list = []
